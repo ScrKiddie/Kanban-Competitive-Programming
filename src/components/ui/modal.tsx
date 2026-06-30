@@ -11,13 +11,14 @@ import { cn } from "@/lib/utils"
 export interface ModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  title: string
+  title: React.ReactNode
   children: React.ReactNode
   className?: string
   contentClassName?: string
   scrollable?: boolean
   hideClose?: boolean
   preventDismiss?: boolean
+  isPending?: boolean
 }
 
 export function Modal({
@@ -30,6 +31,7 @@ export function Modal({
   scrollable = true,
   hideClose = false,
   preventDismiss = false,
+  isPending = false,
 }: ModalProps) {
   const handleOpenChange = (nextOpen: boolean) => {
     if (preventDismiss && !nextOpen) return
@@ -41,6 +43,7 @@ export function Modal({
       <DialogContent
         className={className}
         hideClose={hideClose}
+        isPending={isPending}
         onEscapeKeyDown={(event) => {
           if (preventDismiss) event.preventDefault()
         }}

@@ -199,7 +199,7 @@ export function AddProblemDialog({
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <FieldLabel htmlFor="add-problem-title" required>title</FieldLabel>
+                  <FieldLabel htmlFor="add-problem-title" required>Title</FieldLabel>
                   <Input
                     id="add-problem-title"
                     placeholder="Two Sum"

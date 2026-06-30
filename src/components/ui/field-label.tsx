@@ -8,7 +8,7 @@ type FieldLabelProps = React.ComponentProps<typeof Label> & {
 
 function FieldLabel({ children, className, required, ...props }: FieldLabelProps) {
   return (
-    <Label className={cn("inline-flex items-center gap-1", className)} {...props}>
+    <Label className={cn("inline-flex items-center gap-1 font-heading text-sm text-foreground", className)} {...props}>
       {children}
       {required ? (
         <span aria-hidden="true" className="text-danger">

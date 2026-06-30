@@ -142,8 +142,8 @@ export function AIReviewDialog({
     >
           {loading ? (
             <div className="flex-1 flex flex-col items-center justify-center py-12 px-6 text-foreground">
-              <Loader2 className="size-12 animate-spin mb-4 text-main" />
-              <p className="font-heading text-lg">AI is analyzing your code...</p>
+              <Loader2 className="size-12 animate-spin mb-4" />
+              <p className="font-heading text-lg">Analyzing your code</p>
               <p className="font-base text-sm text-muted-foreground mt-2">Reading techniques, time, and space complexity</p>
             </div>
           ) : error ? (

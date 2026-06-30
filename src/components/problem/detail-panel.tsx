@@ -243,7 +243,7 @@ export function DetailPanel({
 
               <div className="grid gap-4 md:grid-cols-2">
               <div className="md:col-span-2">
-                <Label htmlFor="detail-url" className="mb-2 inline-flex text-xs uppercase tracking-[0.18em]">problem url (auto fetch)</Label>
+                <Label htmlFor="detail-url">Problem URL</Label>
                 <div className="flex gap-2">
                   <Input 
                     className="flex-1"
@@ -292,7 +292,7 @@ export function DetailPanel({
               </div>
 
               <div className="md:col-span-2">
-                <FieldLabel htmlFor="detail-title" required className="mb-2 inline-flex text-xs uppercase tracking-[0.18em]">title</FieldLabel>
+                <FieldLabel htmlFor="detail-title" required>Title</FieldLabel>
                 <Input 
                   id="detail-title"
                   value={title} 
@@ -311,7 +311,7 @@ export function DetailPanel({
               </div>
 
               <div>
-                <Label className="mb-2 inline-flex text-xs uppercase tracking-[0.18em]">platform</Label>
+                <Label>Platform</Label>
                 <Select 
                   disabled={isReadOnly} 
                   value={["leetcode", "codewars", "hackerrank", "codeforces"].includes(platform) ? platform : "custom"} 
@@ -344,7 +344,7 @@ export function DetailPanel({
               </div>
 
               <div>
-                <Label className="mb-2 inline-flex text-xs uppercase tracking-[0.18em]">difficulty</Label>
+                <Label>Difficulty</Label>
                 <Select 
                   disabled={isReadOnly} 
                   value={difficulty} 
@@ -363,7 +363,7 @@ export function DetailPanel({
               </div>
 
               <div>
-                <Label className="mb-2 inline-flex text-xs uppercase tracking-[0.18em]">status</Label>
+                <Label>Status</Label>
                 <Select 
                   disabled={true} 
                   value={status} 
@@ -389,7 +389,7 @@ export function DetailPanel({
               </div>
 
               <div>
-                <Label className="mb-2 inline-flex text-xs uppercase tracking-[0.18em]">timestamps</Label>
+                <Label>Timestamps</Label>
                 <Card className="gap-2 bg-secondary-background p-4 text-sm">
                   <div className="flex items-center justify-between gap-4 border-b-2 border-border pb-2">
                     <span className="font-heading">created</span>
@@ -404,7 +404,7 @@ export function DetailPanel({
             </div>
 
               <div className="md:col-span-2 mt-4">
-                <Label className="mb-2 inline-flex text-xs uppercase tracking-[0.18em]">tags</Label>
+                <Label>Tags</Label>
                 
                 {!isReadOnly && (
                   <div className="flex gap-2 mb-3">
@@ -477,7 +477,7 @@ export function DetailPanel({
               </div>
 
               <div className="mt-6">
-                <Label htmlFor="detail-note" className="mb-2 inline-flex text-xs uppercase tracking-[0.18em]">notes (Problem Description & Insight)</Label>
+                <Label htmlFor="detail-note">Description / Notes</Label>
                 <Textarea
                   value={note}
                   placeholder="Paste problem description here, or auto-fetch from URL, then add your insights/notes..."

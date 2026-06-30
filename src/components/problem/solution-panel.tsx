@@ -8,6 +8,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 function useDebouncedCallback<T extends (...args: never[]) => void>(callback: T, delay: number) {
   const callbackRef = useRef(callback);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [isPending, setIsPending] = useState(false);
 
   useEffect(() => {
     callbackRef.current = callback;
@@ -18,13 +19,16 @@ function useDebouncedCallback<T extends (...args: never[]) => void>(callback: T,
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
     }
+    setIsPending(false);
   };
 
   const run = (...args: Parameters<T>) => {
     cancel();
+    setIsPending(true);
     timeoutRef.current = setTimeout(() => {
       callbackRef.current(...args);
       timeoutRef.current = null;
+      setIsPending(false);
     }, delay);
   };
 
@@ -35,7 +39,7 @@ function useDebouncedCallback<T extends (...args: never[]) => void>(callback: T,
 
   useEffect(() => cancel, []);
 
-  return { run, flush };
+  return { run, flush, isPending };
 }
 
 export function SolutionPanel({
@@ -87,6 +91,8 @@ export function SolutionPanel({
     <Modal
       open={Boolean(problem)}
       onOpenChange={(nextOpen) => !nextOpen && onClose()}
+      preventDismiss={codeDebounce.isPending}
+      isPending={codeDebounce.isPending}
       title={`Solution: ${problem.title}`}
       className="max-w-4xl w-[95vw] sm:w-full sm:max-w-4xl max-h-[95vh] sm:max-h-[85vh] h-[80vh] overflow-hidden flex flex-col"
       contentClassName="p-4 sm:p-6 flex flex-col flex-1 min-h-0 overflow-hidden gap-4"

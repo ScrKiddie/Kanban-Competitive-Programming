@@ -1,5 +1,5 @@
 import { memo, type HTMLAttributes } from "react";
-import { Settings, FolderSymlink, PackageX, Code2, ExternalLink, Eye, RefreshCw, Sparkles, GitBranch, Loader2 } from "lucide-react";
+import { Settings, ArrowRightLeft, Eraser, PackageX, Code2, ExternalLink, Eye, RefreshCw, Sparkles, GitBranch, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -70,7 +70,7 @@ const ProblemCardBody = memo(function ProblemCardBody({ problem, onOpen, onMove,
               tooltip={canMoveToBoard ? "Move to another board" : "No other boards available"}
               disabled={!canMoveToBoard}
             >
-              <FolderSymlink />
+              <ArrowRightLeft />
             </IconButton>
           )}
           {onDelete && (
@@ -86,13 +86,13 @@ const ProblemCardBody = memo(function ProblemCardBody({ problem, onOpen, onMove,
               }}
               tooltip="Delete problem"
             >
-              <PackageX />
+              <Eraser />
             </IconButton>
           )}
         </div>
       </div>
 
-      <div className="mt-3 flex min-w-0 flex-wrap gap-1.5">
+      <div className="mt-2 flex min-w-0 flex-wrap gap-2">
         <Badge
           style={{ backgroundColor: PLATFORM_COLORS[problem.platform as keyof typeof PLATFORM_COLORS] || PLATFORM_COLORS.custom }}
           className="max-w-[min(100%,14rem)] min-w-0 !w-auto !shrink overflow-hidden border-2 font-heading text-main-foreground"
@@ -108,13 +108,13 @@ const ProblemCardBody = memo(function ProblemCardBody({ problem, onOpen, onMove,
           <span className="block min-w-0 truncate">{DIFFICULTY_LABELS[problem.difficulty]}</span>
         </Badge>
         {problem.aiReview && (
-          <Badge className="max-w-[min(100%,10rem)] min-w-0 !w-auto !shrink overflow-hidden gap-1 border-2 border-border bg-[var(--accent-blue)] text-main-foreground">
+          <Badge className="max-w-[min(100%,10rem)] min-w-0 !w-auto !shrink overflow-hidden gap-1 border-2 border-border bg-[#93C5FD] text-main-foreground">
             <span className="block min-w-0 truncate">Reviewed</span>
           </Badge>
         )}
       </div>
 
-      <div className="mt-3 flex flex-wrap gap-1.5">
+      <div className="mt-2 flex flex-wrap gap-2">
         <div className="min-w-0 flex-1 @max-[340px]/card:basis-full" onPointerDown={stopDrag} onMouseDown={stopDrag} onTouchStart={stopDrag}>
           <Select value={problem.status} onValueChange={(value) => {
             const nextStatus = value as Status;

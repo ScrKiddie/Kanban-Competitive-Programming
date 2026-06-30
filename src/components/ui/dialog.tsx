@@ -51,8 +51,9 @@ function DialogContent({
   className,
   children,
   hideClose = false,
+  isPending = false,
   ...props
-}: React.ComponentProps<typeof DialogPrimitive.Content> & { hideClose?: boolean }) {
+}: React.ComponentProps<typeof DialogPrimitive.Content> & { hideClose?: boolean, isPending?: boolean }) {
   return (
     <DialogPortal>
       <DialogOverlay />
@@ -66,8 +67,15 @@ function DialogContent({
       >
         {children}
         {!hideClose && (
-          <DialogPrimitive.Close className="absolute right-4 top-4 rounded-base opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-border focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary-background data-[state=open]:text-muted-foreground">
-            <X className="h-4 w-4" />
+          <DialogPrimitive.Close className="absolute right-4 top-4 rounded-base opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-border focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary-background data-[state=open]:text-muted-foreground flex items-center justify-center min-w-4 min-h-4">
+            {isPending ? (
+              <svg className="h-4 w-4 animate-spin" xmlns="http://www.0.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            ) : (
+              <X className="h-4 w-4" />
+            )}
             <span className="sr-only">Close</span>
           </DialogPrimitive.Close>
         )}

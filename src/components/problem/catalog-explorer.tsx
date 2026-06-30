@@ -89,7 +89,7 @@ export function CatalogExplorer({ onAdd }: CatalogExplorerProps) {
           <Input 
             value={search} 
             onChange={(e) => setSearch(e.target.value)} 
-            placeholder="Search catalog..." 
+            placeholder="Search catalog" 
             className="min-h-0 w-full min-w-0 border-0 bg-transparent p-0 text-sm shadow-none focus-visible:ring-0 focus-visible:ring-offset-0" 
           />
         </label>
@@ -125,14 +125,14 @@ export function CatalogExplorer({ onAdd }: CatalogExplorerProps) {
       <div className="flex-1 min-h-[300px] border-2 border-border bg-background rounded-base overflow-hidden flex flex-col relative">
         {loading && (
           <div className="absolute inset-0 bg-background/50 backdrop-blur-sm z-10 flex items-center justify-center">
-            <Loader2 className="w-8 h-8 animate-spin text-main" />
+            <Loader2 className="w-8 h-8 animate-spin" />
           </div>
         )}
         
         <ScrollArea className="flex-1" viewportClassName="overflow-x-hidden">
           {data?.problems.length === 0 ? (
-            <div className="p-8 text-center text-muted-foreground font-medium">
-              No problems found matching your filters.
+            <div className="p-8 text-center text-sm text-muted-foreground">
+              No problems found
             </div>
           ) : (
             <div className="divide-y-2 divide-border overflow-x-hidden w-full">
@@ -147,15 +147,15 @@ export function CatalogExplorer({ onAdd }: CatalogExplorerProps) {
                           style={{ backgroundColor: DIFFICULTY_COLORS[p.difficulty] }}
                           className="border-2 font-heading text-main-foreground px-1.5 py-0 text-[10px] leading-4"
                         >
-                          {DIFFICULTY_LABELS[p.difficulty].toUpperCase()}
+                          {DIFFICULTY_LABELS[p.difficulty]}
                         </Badge>
                         {p.acceptanceRate && (
-                          <span className="shrink-0 text-xs font-heading text-foreground/80 whitespace-nowrap">
+                          <span className="shrink-0 text-xs font-heading text-foreground whitespace-nowrap">
                             {p.acceptanceRate}% AC
                           </span>
                         )}
                       </div>
-                      <h4 className="font-heading text-sm leading-snug line-clamp-2" title={p.title}>{p.title}</h4>
+                      <h4 className="font-heading text-sm leading-snug line-clamp-2">{p.title}</h4>
                       {p.tags.length > 0 && (
                         <div className="flex gap-1.5 mt-1.5 min-w-0 max-w-full overflow-hidden whitespace-nowrap">
                           {p.tags.slice(0, 3).map(t => (
@@ -208,23 +208,23 @@ export function CatalogExplorer({ onAdd }: CatalogExplorerProps) {
         
         
         <div className="p-3 border-t-2 border-border bg-secondary-background flex items-center justify-between">
-          <div className="text-sm font-bold text-muted-foreground">
+          <div className="text-sm text-muted-foreground">
             {data ? `${(page - 1) * limit + 1}-${Math.min(page * limit, data.total)} of ${data.total}` : "..."}
           </div>
           <div className="flex gap-2">
             <Button 
-              size="sm" 
+              size="icon" 
               variant="neutral" 
-              className="hover:bg-secondary-background"
+              className="h-9 w-9 rounded-sm hover:bg-secondary-background"
               disabled={page === 1 || loading}
               onClick={() => setPage(p => p - 1)}
             >
               <ChevronLeft className="w-4 h-4" />
             </Button>
             <Button 
-              size="sm" 
+              size="icon" 
               variant="neutral" 
-              className="hover:bg-secondary-background"
+              className="h-9 w-9 rounded-sm hover:bg-secondary-background"
               disabled={!data?.hasMore || loading}
               onClick={() => setPage(p => p + 1)}
             >

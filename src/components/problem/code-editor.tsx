@@ -55,6 +55,7 @@ export function SolutionCodeEditor({ code, language, onChange, className = "", r
           size="md"
           onClick={handleCopy}
           tooltip="Copy code"
+          disabled={!code || !code.trim()}
         >
           {copied ? <Check /> : <Copy />}
         </IconButton>

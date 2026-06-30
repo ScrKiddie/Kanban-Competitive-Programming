@@ -24,6 +24,7 @@ import { Input } from "@/components/ui/input";
 import { DEFAULT_BOARD } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface BoardSidebarProps {
   boards: Board[];
@@ -70,14 +71,20 @@ export function BoardSidebar({
             className="h-7 min-h-0 w-full min-w-0 border-0 bg-transparent px-0 py-0 text-sm leading-none shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
           />
         </label>
-        <SidebarMenuButton
-          onClick={onAddBoard}
-          tooltip="New Board"
-          className="size-8 shrink-0 justify-center bg-main p-0 text-main-foreground border-border"
-        >
-          <Plus className="size-4" />
-          <span className="sr-only">New Board</span>
-        </SidebarMenuButton>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <SidebarMenuButton
+              onClick={onAddBoard}
+              className="size-8 shrink-0 justify-center p-0 bg-main text-main-foreground hover:bg-main/90 border-border"
+            >
+              <Plus className="size-4" />
+              <span className="sr-only">New Board</span>
+            </SidebarMenuButton>
+          </TooltipTrigger>
+          <TooltipContent side="right" sideOffset={2}>
+            New Board
+          </TooltipContent>
+        </Tooltip>
       </SidebarHeader>
       <SidebarContent className="min-h-0 overflow-hidden px-0 py-0 group-data-[collapsible=icon]:p-0">
         <div className="relative min-h-0 flex-1">
@@ -117,7 +124,7 @@ export function BoardSidebar({
                               "h-6 w-6 cursor-pointer border-2 border-transparent p-0 flex items-center justify-center text-inherit shadow-none bg-transparent rounded-base outline-none focus:border-transparent focus-visible:border-transparent hover:border-transparent data-[state=open]:border-transparent md:group-hover/board-item:text-main-foreground group-focus-within/board-item:text-main-foreground",
                               activeBoardId === board.id && "text-main-foreground"
                             )}
-                            title="Board Options"
+
                             >
                               <MoreHorizontal className="h-4 w-4" />
                             </MenubarTrigger>

@@ -1,4 +1,5 @@
 import { memo, useCallback, useState, type CSSProperties, type HTMLAttributes } from "react";
+import { createPortal } from "react-dom";
 import { Draggable, Droppable } from "@hello-pangea/dnd";
 import {
   AlertDialog,
@@ -11,12 +12,12 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
 import { IconButton } from "@/components/ui/icon-button";
 import { STATUS_COLORS, STATUS_LABELS } from "@/lib/constants";
 import { Problem, Status } from "@/lib/types";
 import { Trash2 } from "lucide-react";
 import { ProblemCard } from "./problem-card";
+import { cn } from "@/lib/utils";
 
 interface BoardColumnProps {
   status: Status;
@@ -90,36 +91,58 @@ const ProblemCardItem = memo(function ProblemCardItem({ problem, index, onOpen, 
 
   return (
     <Draggable draggableId={problem.id} index={index}>
-      {(provided, snapshot) => (
-        <div
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          style={{
-            ...(provided.draggableProps.style as CSSProperties),
-            marginBottom: 12,
-            transition: snapshot.isDropAnimating ? "transform 0.01s" : provided.draggableProps.style?.transition,
-          }}
-          className={snapshot.isDragging ? "z-[9999]" : undefined}
-        >
-          {card(snapshot.isDragging, provided.dragHandleProps, snapshot.isDropAnimating)}
-        </div>
-      )}
+      {(provided, snapshot) => {
+        const draggableContent = (
+          <div
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            style={{
+              ...(provided.draggableProps.style as CSSProperties),
+              marginBottom: 12,
+              transition: snapshot.isDropAnimating ? "transform 0.01s" : provided.draggableProps.style?.transition,
+            }}
+            className={cn(snapshot.isDragging ? "z-[99999]" : "z-10")}
+          >
+            {card(snapshot.isDragging, provided.dragHandleProps, snapshot.isDropAnimating)}
+          </div>
+        );
+
+        if (snapshot.isDragging) {
+          return createPortal(draggableContent, document.body);
+        }
+
+        return draggableContent;
+      }}
     </Draggable>
   );
 });
 
-export const BoardColumn = memo(function BoardColumn({ status, items, totalItems, hiddenCount, hasFilters, totalProblems, onOpen, onMove, onReview, onDeleteReview, onSolution, onMoveToBoard, canMoveToBoard, onDelete, onClear, dragDisabled = false, onSync, pendingProblemId }: BoardColumnProps) {
+export const BoardColumn = memo(function BoardColumn({ status, items, totalItems, hiddenCount, onOpen, onMove, onReview, onDeleteReview, onSolution, onMoveToBoard, canMoveToBoard, onDelete, onClear, dragDisabled = false, onSync, pendingProblemId }: BoardColumnProps) {
   const [clearOpen, setClearOpen] = useState(false);
 
-  const content = (
-    <>
-      {items.length === 0 ? <Card className="flex min-h-40 w-full flex-1 items-center justify-center self-start bg-secondary-background p-4 text-center text-sm font-medium text-foreground/70 shadow-[2px_2px_0px_0px_var(--border)]">{totalProblems === 0 ? "there are no problems yet" : hasFilters ? "no items match the current filters in this column" : "this column is still empty"}</Card> : null}
-      {items.map((problem, index) => <ProblemCardItem key={problem.id} problem={problem} index={index} onOpen={onOpen} onMove={onMove} onReview={onReview} onDeleteReview={onDeleteReview} onSolution={onSolution} onMoveToBoard={onMoveToBoard} canMoveToBoard={canMoveToBoard} onDelete={onDelete} dragDisabled={dragDisabled} onSync={onSync} pendingProblemId={pendingProblemId} />)}
-    </>
-  );
+  const emptyState = null;
+
+  const content = items.map((problem, index) => (
+    <ProblemCardItem 
+      key={problem.id} 
+      problem={problem} 
+      index={index} 
+      onOpen={onOpen} 
+      onMove={onMove} 
+      onReview={onReview} 
+      onDeleteReview={onDeleteReview} 
+      onSolution={onSolution} 
+      onMoveToBoard={onMoveToBoard} 
+      canMoveToBoard={canMoveToBoard} 
+      onDelete={onDelete} 
+      dragDisabled={dragDisabled} 
+      onSync={onSync} 
+      pendingProblemId={pendingProblemId} 
+    />
+  ));
 
   return (
-    <section className="rounded-base flex min-h-[280px] flex-1 w-full shrink-0 flex-col overflow-visible border-2 border-border p-3 text-status-foreground shadow-shadow md:min-h-[500px] md:min-w-0 md:w-auto md:shrink xl:flex-1" style={{ backgroundColor: STATUS_COLORS[status] }}>
+    <section className="rounded-base flex min-h-[280px] flex-1 w-full shrink-0 flex-col border-2 border-border p-3 text-status-foreground shadow-shadow md:min-h-[500px] md:min-w-0 md:w-auto md:shrink xl:flex-1" style={{ backgroundColor: STATUS_COLORS[status] }}>
       <div className="mb-3 flex items-start justify-between gap-3 border-b-2 border-border pb-3">
         <div>
           <div className="flex items-center gap-2">
@@ -166,18 +189,21 @@ export const BoardColumn = memo(function BoardColumn({ status, items, totalItems
 
       {hiddenCount > 0 ? <div className="mb-3 rounded-base border-2 border-dashed border-border bg-secondary-background px-3 py-2 text-xs font-heading uppercase tracking-[0.12em] text-foreground">{hiddenCount} item hidden by active filter</div> : null}
 
-      {dragDisabled ? (
-        <div className="flex flex-1 flex-col gap-3 pr-1">{content}</div>
-      ) : (
-        <Droppable droppableId={status} type="PROBLEM">
-          {(provided) => (
-            <div ref={provided.innerRef} {...provided.droppableProps} className="flex flex-1 flex-col pr-1 min-h-0">
-              {content}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      )}
+      <div className="flex-1 relative min-h-0 flex flex-col pt-2">
+        {emptyState}
+        {dragDisabled ? (
+          <div className="flex flex-1 flex-col gap-3 pr-1 relative z-10">{content}</div>
+        ) : (
+          <Droppable droppableId={status} type="PROBLEM">
+            {(provided) => (
+              <div ref={provided.innerRef} {...provided.droppableProps} className="flex flex-1 flex-col pr-1 min-h-[100px] relative z-10">
+                {content}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        )}
+      </div>
     </section>
   );
 });

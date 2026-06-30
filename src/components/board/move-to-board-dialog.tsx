@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { FieldError, FieldLabel } from "@/components/ui/field-label";
@@ -24,9 +24,16 @@ export function MoveToBoardDialog({
   const [targetBoardId, setTargetBoardId] = useState<string>("");
   const [error, setError] = useState("");
 
-  if (!problem) return null;
+  const availableBoards = boards.filter((b) => b.id !== problem?.boardId);
 
-  const availableBoards = boards.filter((b) => b.id !== problem.boardId);
+  useEffect(() => {
+    if (!open) {
+      setTargetBoardId("");
+      setError("");
+    }
+  }, [open]);
+
+  if (!problem) return null;
 
   const handleMove = async () => {
     if (availableBoards.length === 0) return;
@@ -59,17 +66,17 @@ export function MoveToBoardDialog({
           <ScrollArea className="flex-1 min-h-0 w-full bg-background">
           <div className="grid gap-4 p-6 pr-7">
             <div className="grid gap-2">
-            <FieldLabel required>target board</FieldLabel>
+            <FieldLabel required>Target Board</FieldLabel>
             <Select
-              value={targetBoardId}
+              value={targetBoardId || undefined}
               onValueChange={(value) => {
                 setTargetBoardId(value);
                 setError("");
               }}
             >
-              <SelectTrigger className={error ? "border-danger" : ""} aria-invalid={Boolean(error)} aria-describedby={error ? "move-board-error" : undefined}>
-                <SelectValue placeholder="Select board..." />
-              </SelectTrigger>
+            <SelectTrigger className={error ? "border-danger" : ""} aria-invalid={Boolean(error)} aria-describedby={error ? "move-board-error" : undefined}>
+              <SelectValue placeholder="Select Board" />
+            </SelectTrigger>
               <SelectContent>
                 {availableBoards.map((b) => (
                   <SelectItem key={b.id} value={b.id}>

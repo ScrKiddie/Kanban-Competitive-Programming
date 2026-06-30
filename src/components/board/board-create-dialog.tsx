@@ -62,7 +62,7 @@ export function BoardCreateDialog({
           <ScrollArea className="flex-1 min-h-0 w-full bg-background">
           <div className="grid gap-4 p-6 pr-7">
             <div className="grid gap-2">
-            <FieldLabel htmlFor="name" required>board name</FieldLabel>
+            <FieldLabel htmlFor="name" required>Board Name</FieldLabel>
             <Input
               id="name"
               value={name}
